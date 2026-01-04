@@ -4,17 +4,53 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.util.BuildInfo;
 
 public class Robot extends TimedRobot {
-  private Command m_autonomousCommand;
+  /** Singleton Stuff */
+  private static Robot instance = null;
 
-  private final RobotContainer m_robotContainer;
+  public static Robot getInstance() {
+    if (instance == null) instance = new Robot();
+    return instance;
+  }
 
-  public Robot() {
-    m_robotContainer = new RobotContainer();
+  private final Controls Controls;
+  public final Subsystems subsystems;
+  private final PowerDistribution PDH;
+
+  protected Robot() {
+    // non public for singleton. Protected so test class can subclass
+
+    instance = this;
+    subsystems = new Subsystems();
+    Controls = new Controls(subsystems);
+    PDH = new PowerDistribution(Hardware.PDH_ID, ModuleType.kRev);
+    LiveWindow.disableAllTelemetry();
+    LiveWindow.enableTelemetry(PDH);
+
+    CommandScheduler.getInstance()
+        .onCommandInitialize(
+            command -> System.out.println("Command initialized: " + command.getName()));
+    CommandScheduler.getInstance()
+        .onCommandInterrupt(
+            (command, interruptor) ->
+                System.out.println(
+                    "Command interrupted: "
+                        + command.getName()
+                        + "; Cause: "
+                        + interruptor.map(cmd -> cmd.getName()).orElse("<none>")));
+    CommandScheduler.getInstance()
+        .onCommandFinish(command -> System.out.println("Command finished: " + command.getName()));
+
+    SmartDashboard.putData(CommandScheduler.getInstance());
+    BuildInfo.logBuildInfo();
   }
 
   @Override
@@ -29,16 +65,14 @@ public class Robot extends TimedRobot {
   public void disabledPeriodic() {}
 
   @Override
-  public void disabledExit() {}
-
-  @Override
-  public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
-    if (m_autonomousCommand != null) {
-      CommandScheduler.getInstance().schedule(m_autonomousCommand);
+  public void disabledExit() {
+    if (subsystems.drivebaseSubsystem != null) {
+      subsystems.drivebaseSubsystem.brakeMotors();
     }
   }
+
+  @Override
+  public void autonomousInit() {}
 
   @Override
   public void autonomousPeriodic() {}
@@ -47,11 +81,7 @@ public class Robot extends TimedRobot {
   public void autonomousExit() {}
 
   @Override
-  public void teleopInit() {
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
-    }
-  }
+  public void teleopInit() {}
 
   @Override
   public void teleopPeriodic() {}
