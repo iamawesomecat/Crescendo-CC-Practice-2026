@@ -14,12 +14,9 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.generated.CompTunerConstants;
 
 public class Controls {
@@ -28,7 +25,7 @@ public class Controls {
   private final CommandXboxController driverController;
 
   private final Subsystems s;
-
+  private final Superstructure superstructure;
   // setting the max speed and other similar variables depending on which drivebase it is
   public static final double MaxSpeed = CompTunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
 
@@ -47,9 +44,12 @@ public class Controls {
 
   private final Telemetry logger = new Telemetry(MaxSpeed);
 
-  public Controls(Subsystems s) {
+  public Controls(Subsystems s, Superstructure superstructure) {
     driverController = new CommandXboxController(DRIVER_CONTROLLER_PORT);
     this.s = s;
+    this.superstructure = superstructure;
+    configureDrivebaseBindings();
+    configureSuperstructureBindings();
   }
 
   private Command rumble(CommandXboxController controller, double vibration, Time duration) {
@@ -94,16 +94,6 @@ public class Controls {
 
     // logging the telemetry
     s.drivebaseSubsystem.registerTelemetry(logger::telemeterize);
-
-    // creats a swerve button that coasts the wheels
-    var swerveCoastButton =
-        Shuffleboard.getTab("Controls")
-            .add("Swerve Coast Mode", false)
-            .withWidget(BuiltInWidgets.kToggleButton)
-            .getEntry();
-    // coast the wheels
-    new Trigger(() -> swerveCoastButton.getBoolean(false))
-        .whileTrue(s.drivebaseSubsystem.coastMotors());
   }
 
   private double getJoystickInput(double input) {
@@ -136,5 +126,17 @@ public class Controls {
     // Joystick +X is right
     // Robot +angle is CCW (left)
     return getJoystickInput(-driverController.getRightX()) * MaxSpeed;
+  }
+
+  private void configureSuperstructureBindings() {
+
+    if (superstructure == null) {
+      // Stop running this method
+      return;
+    }
+    driverController.a().onTrue(superstructure.stationIntake());
+    driverController.b().onTrue(superstructure.subwooferShot());
+    driverController.y().onTrue(s.pivotSubsystem.setPositionCommand(0.7));
+    driverController.x().onTrue(s.flywheelsSubsystem.stopCommand());
   }
 }

@@ -24,13 +24,17 @@ public class Robot extends TimedRobot {
   private final Controls Controls;
   public final Subsystems subsystems;
   private final PowerDistribution PDH;
+  public final Superstructure superstructure;
 
   protected Robot() {
     // non public for singleton. Protected so test class can subclass
 
     instance = this;
     subsystems = new Subsystems();
-    Controls = new Controls(subsystems);
+    superstructure =
+        new Superstructure(
+            subsystems.indexerSubsystem, subsystems.flywheelsSubsystem, subsystems.pivotSubsystem);
+    Controls = new Controls(subsystems, superstructure);
     PDH = new PowerDistribution(Hardware.PDH_ID, ModuleType.kRev);
     LiveWindow.disableAllTelemetry();
     LiveWindow.enableTelemetry(PDH);
@@ -56,6 +60,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
+    subsystems.pivotSubsystem.updateMech2d();
   }
 
   @Override

@@ -20,8 +20,8 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import java.util.function.Supplier;
 import frc.robot.generated.CompTunerConstants;
+import java.util.function.Supplier;
 
 /**
  * Class that extends the Phoenix 6 SwerveDrivetrain class and implements Subsystem so it can easily
@@ -263,7 +263,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     configNeutralMode(NeutralModeValue.Brake);
   }
 
-    public double[] getWheelRotations() {
+  public double[] getWheelRotations() {
     double wheelCircumference = 2 * Math.PI * CompTunerConstants.kWheelRadius.abs(Meter);
     double[] values = new double[4];
     for (int i = 0; i < values.length; i++) {

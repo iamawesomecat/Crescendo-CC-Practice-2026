@@ -3,35 +3,30 @@ DESKTOP-DKOJ87F
 ### Project path (convertPath(projectDir.path))
 C:\Users\$USERNAME\Documents\GitHub\Crescendo-CC-Practice-2026
 ### Commit hash (git log -1 --format=%H)
-4a2e62cdae2c82019889f025af0c9c9bae811a47
+cc6d910f694c456fbf26074520ae7610119d47bb
 ### Refs to latest commit (git log -1 --format=%D)
 HEAD -> main, origin/main, origin/HEAD
 ### Commit time (git log -1 --format=%ad)
-Sat Jan 3 17:14:27 2026 -0800
+Sat Jan 3 21:23:50 2026 -0800
 ### Commit message (git log -1 --format=%B)
-Whoopsies
+woahhhh im goated
 
 ### Remotes (git remote -v)
 origin	https://github.com/iamawesomecat/Crescendo-CC-Practice-2026.git (fetch)
 origin	https://github.com/iamawesomecat/Crescendo-CC-Practice-2026.git (push)
 ### Changed files (git diff-index --name-only HEAD --)
-build.gradle
-settings.gradle
-src/main/java/frc/robot/Main.java
-src/main/java/frc/robot/Robot.java
-src/main/java/frc/robot/RobotContainer.java
-### Untracked files (git ls-files --exclude-standard --others)
-buildinfo.gradle
-gradlew.ps1
+simgui-ds.json
 src/main/deploy/build-info.txt
 src/main/java/frc/robot/Controls.java
-src/main/java/frc/robot/Hardware.java
+src/main/java/frc/robot/Robot.java
 src/main/java/frc/robot/Subsystems.java
-src/main/java/frc/robot/Telemetry.java
-src/main/java/frc/robot/generated/CompTunerConstants.java
+src/main/java/frc/robot/Superstructure.java
 src/main/java/frc/robot/subsystems/drivebase/CommandSwerveDrivetrain.java
-src/main/java/frc/robot/subsystems/drivebase/TunerSwerveDrivetrain.java
 src/main/java/frc/robot/subsystems/flywheels/Flywheels.java
-src/main/java/frc/robot/util/BuildInfo.java
-vendordeps/Phoenix6-26.0.0-beta-1.json
+src/main/java/frc/robot/subsystems/indexer/Indexer.java
+src/main/java/frc/robot/subsystems/pivot/Pivot.java
+src/main/java/frc/robot/subsystems/pivot/PivotConstants.java
+### Untracked files (git ls-files --exclude-standard --others)
+src/main/java/frc/robot/subsystems/flywheels/FlywheelsConstants.java
+src/main/java/frc/robot/subsystems/indexer/IndexerConstants.java
 ### (END)
